@@ -4,3 +4,8 @@
 lua/user/
 shell/user.zsh
 search-roots.local.json
+
+# Per-developer agent tooling (BMad install): regenerate locally, never committed.
+.claude/
+_bmad/
+skills-lock.json
