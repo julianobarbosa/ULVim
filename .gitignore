@@ -8,4 +8,5 @@ search-roots.local.json
 # Per-developer agent tooling (BMad install): regenerate locally, never committed.
 .claude/
 _bmad/
+_bmad-output/
 skills-lock.json
