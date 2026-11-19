@@ -171,6 +171,8 @@ In the file explorer, `l` opens, `h` and Backspace go up, `q` closes, and `Ctrl-
 
 </details>
 
+On WSL, the clipboard keys use Windows clipboard interop, including from inside tmux.
+
 **In the shell**
 
 | Name | Does |

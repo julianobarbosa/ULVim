@@ -72,6 +72,20 @@ o.virtualedit = "block"
 o.jumpoptions = "view"
 o.clipboard = "" -- the + register only through <leader>y / <leader>p
 
+-- Use Windows interop on WSL so the +/* registers target the Windows clipboard, including in tmux.
+if vim.fn.has("wsl") == 1 and vim.fn.executable("clip.exe") == 1 and vim.fn.executable("powershell.exe") == 1 then
+	local powershell_paste = {
+		"powershell.exe", "-NoLogo", "-NoProfile", "-NonInteractive", "-Command",
+		"[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new(); Get-Clipboard -Raw",
+	}
+	g.clipboard = {
+		name = "WSL Windows clipboard",
+		copy = { ["+"] = { "clip.exe" }, ["*"] = { "clip.exe" } },
+		paste = { ["+"] = powershell_paste, ["*"] = powershell_paste },
+	cache_enabled = 0,
+	}
+end
+
 -- Quiet comforts a polished editor gives without being asked.
 o.splitkeep = "screen"
 o.autowrite = true
