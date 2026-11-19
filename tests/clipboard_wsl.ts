@@ -3,6 +3,21 @@ import { tmpdir } from "node:os";
 import { delimiter, join } from "node:path";
 
 const ROOT = join(import.meta.dir, "..");
+const nvim = Bun.which("nvim");
+if (!nvim) throw new Error("nvim is required to run the WSL clipboard check");
+
+const wslProbe = Bun.spawnSync(
+  [nvim, "--headless", "--clean", "-c", 'lua io.write(vim.fn.has("wsl")); vim.cmd("qa!")'],
+  { stdout: "pipe", stderr: "pipe", timeout: 20_000 },
+);
+if (wslProbe.exitCode !== 0) {
+  throw new Error("Could not query Neovim's WSL predicate: " + wslProbe.stderr.toString());
+}
+if (wslProbe.stdout.toString().trim() !== "1") {
+  console.log("SKIP wsl clipboard copy: Neovim reports this host is not WSL");
+  process.exit(0);
+}
+
 const scratch = mkdtempSync(join(tmpdir(), "ulvim-clipboard-test-"));
 const bin = join(scratch, "bin");
 const config = join(scratch, "config");
@@ -26,7 +41,7 @@ for (const name of ["powershell.exe", "clip.exe", "wsl-clip"]) {
 
 const text = "ULVim-clipboard-check-ç-│";
 const run = Bun.spawnSync(
-  ["/usr/bin/nvim", "--headless", "-c", `lua vim.fn.setreg("+", ${JSON.stringify(text)}); vim.cmd("qa!")`, "+qa"],
+  [nvim, "--headless", "-c", `lua vim.fn.setreg("+", ${JSON.stringify(text)}); vim.cmd("qa!")`, "+qa"],
   {
     cwd: ROOT,
     env: {
