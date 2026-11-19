@@ -28,6 +28,10 @@ vim.pack.add({
 	{ src = gh("nvim-treesitter/nvim-treesitter"), version = "main" },
 	-- key hints
 	gh("nvim-mini/mini.clue"),
+	-- git workflow (fugitive-style)
+	gh("tpope/vim-fugitive"),
+	-- opencode integration
+	gh("nickjvandyke/opencode.nvim"),
 }, { confirm = false })
 
 -- Ghostty config syntax ships inside the app bundle.
