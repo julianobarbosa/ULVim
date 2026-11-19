@@ -72,15 +72,19 @@ o.virtualedit = "block"
 o.jumpoptions = "view"
 o.clipboard = "" -- the + register only through <leader>y / <leader>p
 
--- Use Windows interop on WSL so the +/* registers target the Windows clipboard, including in tmux.
-if vim.fn.has("wsl") == 1 and vim.fn.executable("clip.exe") == 1 and vim.fn.executable("powershell.exe") == 1 then
+-- Use PowerShell on WSL: clip.exe uses the Windows console codepage and appends CRLF.
+if vim.fn.has("wsl") == 1 and vim.fn.executable("powershell.exe") == 1 then
+	local powershell_copy = {
+		"powershell.exe", "-NoLogo", "-NoProfile", "-NonInteractive", "-STA", "-Command",
+		"[Console]::InputEncoding = [System.Text.UTF8Encoding]::new(); $text = [Console]::In.ReadToEnd(); Set-Clipboard -Value $text",
+	}
 	local powershell_paste = {
 		"powershell.exe", "-NoLogo", "-NoProfile", "-NonInteractive", "-Command",
-		"[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new(); Get-Clipboard -Raw",
+		"[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new(); [Console]::Write((Get-Clipboard -Raw))",
 	}
 	g.clipboard = {
 		name = "WSL Windows clipboard",
-		copy = { ["+"] = { "clip.exe" }, ["*"] = { "clip.exe" } },
+		copy = { ["+"] = powershell_copy, ["*"] = powershell_copy },
 		paste = { ["+"] = powershell_paste, ["*"] = powershell_paste },
 	cache_enabled = 0,
 	}

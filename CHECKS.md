@@ -143,3 +143,4 @@ Commands run from the repo root with `NVIM_APPNAME=ulvim`. This file is generate
 | ISC-171 | secrets keep no undo or history | undofile off, 0 history lines | `PROBE='secret-no-undo' nvim --headless +'luafile tests/probe.lua'` |
 | ISC-172 | wrap keys are literal | control bytes wrapped as text | `PROBE='wrap-literal' nvim --headless +'luafile tests/probe.lua'` |
 | ISC-173 | CI actions pinned by SHA | 0 tag pins | `bun tests/ci_pins.ts` |
+| ISC-174 | WSL charwise copy preserves text | exact Unicode bytes, no added newline | `bun tests/clipboard_wsl.ts` |
